@@ -14,7 +14,7 @@ streaming video as well as on images. We have used deep learning to develop
 our face detector model. The algorithm used for the object detection purpose is
 Haar-Cascade because of its good performance accuracy and high speed. Alongside this, we have used basic concepts of transfer learning in neural networks to finally output presence or absence of a face mask in an image or a video stream. Experimental results show that our model performs well on the test data.
 
-## The machine learns new images from a folder
+## Save emcodings along with the user names in dictionary data
 ![Train](https://user-images.githubusercontent.com/44768171/130819063-503544cf-8564-47e8-a26d-cb0d735ce85b.jpeg)
 
 ## For synchronization with a local database - phpMyAdmin
