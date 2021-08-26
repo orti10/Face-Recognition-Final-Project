@@ -15,7 +15,7 @@ our face detector model. The algorithm used for the object detection purpose is
 Haar-Cascade because of its good performance accuracy and high speed. Alongside this, we have used basic concepts of transfer learning in neural networks to finally output presence or absence of a face mask in an image or a video stream. Experimental results show that our model performs well on the test data.
 
 ## Save emcodings along with the user names in dictionary data
-![Train](https://user-images.githubusercontent.com/44768171/130819063-503544cf-8564-47e8-a26d-cb0d735ce85b.jpeg)
+![Train](https://user-images.githubusercontent.com/44768171/130934019-5ec1d885-7ea0-41b6-89c4-164ea86687b0.jpeg)
 
 ## For synchronization with a local database - phpMyAdmin
 ![XAMPP](https://user-images.githubusercontent.com/44768171/130819102-f922e3fb-3291-4804-89c7-ba3f2759c99d.jpeg)
