@@ -3,6 +3,8 @@ import tkinter
 from tkinter import font
 from typing import Text
 
+from tensorflow.python.keras.saving.save import load_model
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import pickle
 import shutil
@@ -202,10 +204,82 @@ class Main:
     
         self.creat_combox()
         self.Creat_Menu()
-        self.label_frame = ttk.LabelFrame(self.root, text = "Add New Images")
+        self.label_frame = ttk.LabelFrame(self.root)
         self.label_frame.grid(column=0, row=1, padx=20, pady=20)
+        
+        
+
+
+        self.label_image = ttk.LabelFrame(self.root)
+        self.label_image.grid(column=0, row=3, padx=20, pady=20)
+
+
+        self.add_folder_buton()
         self.add_img_buton()
-       
+        
+    def Rec_By_Image(self,path:str):
+        #find path of xml file containing haarcascade file
+        cascPathface = "haarcascade_frontalface_alt2.xml"
+        # load the harcaascade in the cascade classifier
+        faceCascade = cv2.CascadeClassifier(cascPathface)
+        # load the known faces and embeddings saved in last file
+        data = pickle.loads(open('face_enc', "rb").read())
+        #Find path to the image you want to detect face and pass it here
+        image = cv2.imread(path)
+        try:
+            rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        except:
+            print("No image was selected. Try select another image")    
+        #convert image to Greyscale for haarcascade
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        faces = faceCascade.detectMultiScale(image,
+                                            scaleFactor=1.1,
+                                            minNeighbors=4,
+                                            minSize=(60, 60),
+                                            flags=cv2.CASCADE_SCALE_IMAGE)
+        
+        # the facial embeddings for face in input
+        encodings = face_recognition.face_encodings(rgb,known_face_locations=None, num_jitters=5,model='small')
+        names = []
+        # loop over the facial embeddings incase
+        # we have multiple embeddings for multiple fcaes
+        for encoding in encodings:
+            #Compare encodings with encodings in data["encodings"]
+            #Matches contain array with boolean values and True for the embeddings it matches closely
+            #and False for rest
+            matches = face_recognition.compare_faces(data["encodings"],
+            encoding)
+            #set name =inknown if no encoding matches
+            name = "Unknown"
+            # check to see if we have found a match
+            if True in matches:
+                #Find positions at which we get True and store them
+                matchedIdxs = [i for (i, b) in enumerate(matches) if b]
+                counts = {}
+                # loop over the matched indexes and maintain a count for
+                # each recognized face face
+                for i in matchedIdxs:
+                    #Check the names at respective indexes we stored in matchedIdxs
+                    name = data["names"][i]
+                    #increase count for the name we got
+                    counts[name] = counts.get(name, 0) + 1
+                    #set name which has highest count
+                    name = max(counts, key=counts.get)
+        
+        
+                # update the list of names
+                names.append(name)
+                # loop over the recognized faces
+                for ((x, y, w, h), name) in zip(faces, names):
+                    # rescale the face coordinates
+                    # draw the predicted face name on the image
+                    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    cv2.putText(image, name, (x, y), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.75, (0, 255, 0), 2)
+                cv2.putText(image, name, (x, y), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.75, (0, 255, 0), 2)    
+            cv2.imshow("Frame", image)
+            cv2.waitKey(10)    
     def Click_Me(self):
         self.label.configure(text = "Selected :" + self.languages.get())
         if self.languages.get().__eq__("Mask Detctor"):
@@ -239,12 +313,25 @@ class Main:
 
         self.button = ttk.Button(self.root, text = "Run", command = self.Click_Me)
         self.button.grid(column = 3, row = 0)
-
-        #add new image to the dataset
     def add_img_buton(self):
-        button = ttk.Button(self.label_frame, text = "Browse A File", command= self.file_dialog)
-        #self.label.configure(text = "Selected :" + self.languages.get())
+        button = ttk.Button(self.label_image, text = "Upload Image", command= self.image_dialog)
+        button.grid(column=1,row=6) 
+        #add new image to the dataset
+    def add_folder_buton(self):
+        button = ttk.Button(self.label_frame, text = "Select Folder", command= self.file_dialog)
         button.grid(column=1,row=1) 
+
+        
+    def image_dialog(self):
+        root = Tk()
+        root.withdraw() #use to hide tkinter window
+        # current dir path
+        currdir = os.getcwd()
+        # file name to copy to current directory
+        img_path = filedialog.askopenfilename(parent=root, initialdir=currdir, title='Please select image')
+        label = ttk.Label(self.label_image, text = "")
+        label.configure(text=img_path)   
+        self.Rec_By_Image(path=img_path)  
     def file_dialog(self):
         root = Tk()
         root.withdraw() #use to hide tkinter window
@@ -318,8 +405,10 @@ class Main:
         self.creat_directory(name=os.path.basename(os.path.normpath(src)),parent_dir=dst)
 
         # distnation is now the new directory
-        dst = dst + "/" + os.path.basename(os.path.normpath(src))
-        
+        try:
+            dst = dst + "/" + os.path.basename(os.path.normpath(src))
+        except:
+            print("No folder was selected. Try select another folder")
         for item in os.listdir(src):
             s = os.path.join(src, item)
             d = os.path.join(dst, item)
@@ -347,9 +436,6 @@ class Main:
     def window_close(self):
         self.root.destroy()
         exit()
-    def App_Info(self):
-        filename = "readme.txt"
-        os.startfile(filename)
 class About:
     def __init__(self):
         self.root = tkinter.Tk()
@@ -366,7 +452,6 @@ class About:
         self.back.pack()
         self.label.pack()
         self.text_button.pack()
-        
         self.root.mainloop()
 root = Tk()
 obj = Login()

@@ -3,12 +3,15 @@ import datetime as dt
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import os
 import pickle
+import time
 import tkinter as tk
 from datetime import date, datetime
 
 import cv2
 import face_recognition
+import imutils
 import numpy as np
 import PIL
 from PIL import Image, ImageTk
@@ -22,7 +25,7 @@ class Video:
     def __init__(self,selfvideo_source=0, vid_typ:str="", face_recog:bool=False):
         win = tk.Toplevel()
         self.root = win
-        self.root.title("window_title")
+        self.root.title("Camera Mode")
         self.video_source = 0
         self.ok=False
         self.vid_typ = vid_typ
@@ -182,7 +185,6 @@ class VideoCapture:
 
                         name = ""
                         if(self.is_facerecogntion):
-                            
                             name = self.getFaceRecognation(frame,'face_enc')    
                         #face recognation 
                         cv2.putText(frame, name , (x+50 , y - 100), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
