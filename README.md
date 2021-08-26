@@ -1,5 +1,5 @@
 # Final Project | Face Recognition
-### Written and coded by: Mulugeta Fanta, Ortal Hanoch and Tomer Maabari
+### Ⓒ Written and coded by: Mulugeta Fanta, Ortal Hanoch and Tomer Maabari
 
 Ariel University, Israel
 
