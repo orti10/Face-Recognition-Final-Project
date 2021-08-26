@@ -27,3 +27,6 @@ Haar-Cascade because of its good performance accuracy and high speed. Alongside 
 ## Experiments and Simulation Results 
 
 The experimental result of system performance is evaluated with the MobileNetV2 classifier ADAM optimizes. (ADAM is a gradient descent with some enhancements. It uses the moving average of the previous gradients + normalizing by root mean squared error). As the technology is blooming with the emerging of new trends, we have innovative face mask detector which can possibly contribute to public health care department. The architecture consists of MobileNetV2 classifier and ADAM optimizer as the backbone it can be used for high and low computation scenarios. Our face mask detection is trained on CNN model and we used Open CV, TensorFlow and Keras to detect whether person is wearing a mask or not. The model was tested with image and real time video stream. The accuracy of model is achieved, and the optimization of the model is in continuous process. This specific model could be used as a use case of edge analytics.
+
+## Video:
+![output](https://user-images.githubusercontent.com/44768171/130949936-0761e991-26b1-4480-bfa5-3b4d1eb64ea1.gif)
